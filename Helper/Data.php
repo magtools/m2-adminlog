@@ -112,8 +112,6 @@ class Data extends AbstractHelper
     {
         $path = $this->getLogPath();
         $fullPath = $path . DS . $fileName;
-        //exec('tail -'. $numOfLines . ' ' . $fullPath, $output);
-        //return implode($output).$fullPath;
 
         return $this->getTailCustom($fullPath, $numOfLines);
     }

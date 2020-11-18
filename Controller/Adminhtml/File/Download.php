@@ -7,9 +7,11 @@ use Magento\Backend\App\Action\Context;
 use Magento\Backend\Controller\Adminhtml\System;
 use Magento\Framework\App\Response\Http\FileFactory;
 use Magento\Framework\Exception\NotFoundException;
+use Magento\Framework\App\Filesystem\DirectoryList;
 
 class Download extends System
 {
+
     /**
      * @var Context $context
      * @var FileFactory $fileFactory
@@ -49,7 +51,9 @@ class Download extends System
      */
     protected function getFilePathWithFile($fileName)
     {
-        return 'var/log/' . $fileName;
+        $path = DirectoryList::getDefaultConfig()[DirectoryList::LOG];
+
+        return reset($path) . DS . $fileName;
     }
 
     /**
