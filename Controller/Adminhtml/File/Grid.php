@@ -31,7 +31,7 @@ class Grid extends \Magento\Backend\App\Action
     {
         $this->_view->loadLayout();
         $this->_setActiveMenu('Magento_Backend::system');
-        $this->_view->getPage()->getConfig()->getTitle()->prepend(__('File Logs'));
+        $this->_view->getPage()->getConfig()->getTitle()->prepend(__('Log Files'));
         $this->_view->renderLayout();
     }
 

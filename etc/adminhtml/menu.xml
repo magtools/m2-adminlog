@@ -3,7 +3,7 @@
         xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
     <menu>
         <add id="Mtools_AdminLog::file_logs_view"
-             title="View File Logs"
+             title="View Log Files"
              module="Mtools_AdminLog"
              sortOrder="100"
              parent="Magento_AsynchronousOperations::system_magento_logging"
