@@ -1,0 +1,69 @@
+<?php /** @var $block \Mtools\AdminLog\Block\File\View */ ?>
+
+<section class="admin__page-section">
+    <div class="admin__page-section-content">
+        <div class="admin__page-section-item-title">
+            <span class="title"><?php echo $block->getFileName() ?></span>
+            <a href="<?php echo $block->getBackUrl() ?>">Back</a>
+        </div>
+        <div class="admin__page-section-item-content">
+            <pre><?php //echo $block->getLogFile() ?></pre>
+        </div>
+        <div class="admin__page-section-item-content">
+            <span class="label"><?php echo __('Limits') ?></span>
+            <?php foreach ($block->getLimits() as $limit): ?>
+                <?php if ($limit == $block->getLimit()): ?>
+                    <span><?php echo $limit ?></span>
+                <?php else: ?>
+                    <a href="<?php echo $block->getLimitUrl($limit); ?>"><?php echo $limit ?></a>
+                <?php endif; ?>
+            <?php endforeach; ?>
+        </div>
+        <div class="admin__page-section-item-content">
+            <span class="label"><?php echo __('Start from') ?></span>
+            <?php $i = 0; ?>
+            <?php foreach ($block->getStarts() as $start): ?>
+                <?php if ($start == $block->getStart()): ?>
+                    <span><?php echo $start ?></span>
+                <?php else: ?>
+                    <a href="<?php echo $block->getStartUrl($start); ?>"><?php echo $start ?></a>
+                <?php endif; ?>
+            <?php endforeach; ?>
+        </div>
+        <div class="admin__page-section-item-content">
+            <table>
+            <?php foreach ($block->getLogFileBlocks() as $time => $logBlock): ?>
+                <tr>
+                    <td style="vertical-align: top; width: 150px">
+                        <?php echo $time; ?>
+                    </td>
+                    <td style="vertical-align: top">
+                        <pre><?php echo str_replace("\n\n", "\n", $logBlock); ?></pre>
+                    </td>
+                </tr>
+            <?php endforeach; ?>
+            </table>
+        </div>
+        <div class="admin__page-section-item-content">
+            <span class="label"><?php echo __('Limits') ?></span>
+            <?php foreach ($block->getLimits() as $limit): ?>
+                <?php if ($limit == $block->getLimit()): ?>
+                    <span><?php echo $limit ?></span>
+                <?php else: ?>
+                    <a href="<?php echo $block->getLimitUrl($limit); ?>"><?php echo $limit ?></a>
+                <?php endif; ?>
+            <?php endforeach; ?>
+        </div>
+        <div class="admin__page-section-item-content">
+            <span class="label"><?php echo __('Start from') ?></span>
+            <?php $i = 0; ?>
+            <?php foreach ($block->getStarts() as $start): ?>
+                <?php if ($start == $block->getStart()): ?>
+                    <span><?php echo $start ?></span>
+                <?php else: ?>
+                    <a href="<?php echo $block->getStartUrl($start); ?>"><?php echo $start ?></a>
+                <?php endif; ?>
+            <?php endforeach; ?>
+        </div>
+    </div>
+</section>
