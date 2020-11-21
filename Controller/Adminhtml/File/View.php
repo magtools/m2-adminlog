@@ -8,6 +8,11 @@ use Magento\Framework\View\Result\PageFactory;
 class View extends \Magento\Backend\App\Action
 {
     /**
+     * @const acl
+     */
+    const ADMIN_RESOURCE = 'Mtools_AdminLog::logfiles_view';
+
+    /**
      * @var PageFactory
      */
     protected $resultPageFactory;
@@ -30,16 +35,8 @@ class View extends \Magento\Backend\App\Action
     public function execute()
     {
         $this->_view->loadLayout();
-        $this->_view->getPage()->getConfig()->getTitle()->prepend(__('View File Log'));
+        $this->_view->getPage()->getConfig()->getTitle()->prepend(__('View Log File'));
         $this->_view->renderLayout();
 
-    }
-
-    /**
-     * @return boolean
-     */
-    protected function _isAllowed()
-    {
-        return $this->_authorization->isAllowed('Mtools_AdminLog::logfiles_view');
     }
 }

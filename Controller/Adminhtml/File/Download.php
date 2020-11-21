@@ -11,6 +11,10 @@ use Magento\Framework\App\Filesystem\DirectoryList;
 
 class Download extends System
 {
+    /**
+     * @const acl
+     */
+    const ADMIN_RESOURCE = 'Mtools_AdminLog::logfiles_download';
 
     /**
      * @var Context $context
@@ -18,6 +22,10 @@ class Download extends System
      */
     protected $fileFactory;
 
+    /**
+     * @param Context     $context
+     * @param FileFactory $fileFactory
+     */
     public function __construct(
         Context $context,
         FileFactory $fileFactory
@@ -26,6 +34,10 @@ class Download extends System
         parent::__construct($context);
     }
 
+    /**
+     * @return \Magento\Framework\App\ResponseInterface|\Magento\Framework\Controller\ResultInterface
+     * @throws NotFoundException
+     */
     public function execute()
     {
         $filePath = $this->getFilePathWithFile($this->getRequest()->getParam('file'));
@@ -54,13 +66,5 @@ class Download extends System
         $path = DirectoryList::getDefaultConfig()[DirectoryList::LOG];
 
         return reset($path) . DS . $fileName;
-    }
-
-    /**
-     * @return boolean
-     */
-    protected function _isAllowed()
-    {
-        return $this->_authorization->isAllowed('Mtools_AdminLog::logfiles_download');
     }
 }

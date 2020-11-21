@@ -8,6 +8,11 @@ use Magento\Framework\View\Result\PageFactory;
 class Grid extends \Magento\Backend\App\Action
 {
     /**
+     * @const acl
+     */
+    const ADMIN_RESOURCE = 'Mtools_AdminLog::logfiles_view';
+
+    /**
      * @var PageFactory
      */
     protected $resultPageFactory;
@@ -33,13 +38,5 @@ class Grid extends \Magento\Backend\App\Action
         $this->_setActiveMenu('Magento_Backend::system');
         $this->_view->getPage()->getConfig()->getTitle()->prepend(__('Log Files'));
         $this->_view->renderLayout();
-    }
-
-    /**
-     * @return boolean
-     */
-    protected function _isAllowed()
-    {
-        return $this->_authorization->isAllowed('Mtools_AdminLog::logfiles_view');
     }
 }

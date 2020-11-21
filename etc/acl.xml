@@ -8,7 +8,7 @@
                     <resource id="Magento_Logging::magento_logging"
                               title="File Logs" translate="title" sortOrder="70">
                         <resource id="Mtools_AdminLog::logfiles_view"
-                                  title="View Lof Files" translate="title" sortOrder="100"/>
+                                  title="View Log Files" translate="title" sortOrder="100"/>
                         <resource id="Mtools_AdminLog::logfiles_download"
                                   title="Download Log Files" translate="title" sortOrder="105"/>
                     </resource>
