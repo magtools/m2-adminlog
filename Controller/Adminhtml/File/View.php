@@ -37,6 +37,5 @@ class View extends \Magento\Backend\App\Action
         $this->_view->loadLayout();
         $this->_view->getPage()->getConfig()->getTitle()->prepend(__('View Log File'));
         $this->_view->renderLayout();
-
     }
 }

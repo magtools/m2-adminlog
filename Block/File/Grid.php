@@ -21,8 +21,7 @@ class Grid extends \Magento\Framework\View\Element\Template
         Context $context,
         Data $logFileHelper,
         array $data = []
-    )
-    {
+    ) {
         $this->logFileHelper = $logFileHelper;
         parent::__construct($context, $data);
     }
