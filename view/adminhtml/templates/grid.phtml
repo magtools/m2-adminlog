@@ -4,7 +4,7 @@
 <section class="admin__page-section">
     <div class="admin__page-section-content">
         <div class="admin__page-section-item-title">
-            <span class="title"><?php echo __('Log Info') ?></span>
+            <span class="title"><?= __('Log Info') ?></span>
         </div>
         <div class="admin__page-section-item-content">
             <table class="admin__table-primary">
@@ -18,18 +18,18 @@
                 </tr>
             <?php foreach ($logs as $log) { ?>
                 <tr>
-                    <td class="filename"><a href="<?php echo $block->previewLogFile($log['name']); ?>"><?php echo $log['name'] ?></a></td>
+                    <td class="filename"><a href="<?= $block->previewLogFile($log['name']); ?>"><?= $log['name'] ?></a></td>
                     <td class="small">var/log</td>
-                    <td class="small"><?php echo $log['filesize'] ?></td>
-                    <td class="date"><?php echo $log['modTimeLong'] ?></td>
+                    <td class="small"><?= $log['filesize'] ?></td>
+                    <td class="date"><?= $log['modTimeLong'] ?></td>
                     <td class="log">
                         <div class="admin__page-section-item-content">
-                            <pre><?php echo $block->getLogFile($log['name']) ?></pre>
+                            <pre><?= $block->getLogFile($log['name']) ?></pre>
                         </div>
                     </td>
                     <td class="small">
-                        <span class="action-children"><a href="<?php echo $block->previewLogFile($log['name']); ?>" class="icon-view"> View</a></span><br/>
-                        <span class="action-children"><a href="<?php echo $block->downloadLogFiles($log['name']); ?>" class="icon-export"> Download</a></span>
+                        <span class="action-children"><a href="<?= $block->previewLogFile($log['name']); ?>" class="icon-view"> View</a></span><br/>
+                        <span class="action-children"><a href="<?= $block->downloadLogFiles($log['name']); ?>" class="icon-export"> Download</a></span>
                     </td>
                 </tr>
             <?php } ?>

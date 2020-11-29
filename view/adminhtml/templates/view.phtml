@@ -43,31 +43,31 @@
 <section class="admin__page-section">
     <div class="admin__page-section-content">
         <div class="admin__page-section-item-title">
-            <span class="title"><?php echo $block->getFileName() ?></span>
-            <a href="<?php echo $block->getBackUrl() ?>">Back</a>
+            <span class="title"><?= $block->getFileName() ?></span>
+            <a href="<?= $block->getBackUrl() ?>">Back</a>
         </div>
         <div class="admin__page-section-item-content">
             <pre><?php //echo $block->getLogFile() ?></pre>
         </div>
         <div class="admin__page-section-item-content controls">
             <div class="admin__page-section-item-content-action limit">
-                <span class="label"><?php echo __('Lines to show') ?>: </span>
+                <span class="label"><?= __('Lines to show') ?>: </span>
                 <?php foreach ($block->getLimits() as $limit): ?>
                     <?php if ($limit == $block->getLimit()): ?>
-                        <span><?php echo $limit ?></span>
+                        <span><?= $limit ?></span>
                     <?php else: ?>
-                        <a href="<?php echo $block->getLimitUrl($limit); ?>"><?php echo $limit ?></a>
+                        <a href="<?= $block->getLimitUrl($limit); ?>"><?= $limit ?></a>
                     <?php endif; ?>
                 <?php endforeach; ?>
             </div>
             <div class="admin__page-section-item-content-action pager">
-                <span class="label"><?php echo __('Start from line') ?>: </span>
+                <span class="label"><?= __('Start from line') ?>: </span>
                 <?php $i = 0; ?>
                 <?php foreach ($block->getStarts() as $start): ?>
                     <?php if ($start == $block->getStart()): ?>
-                        <span><?php echo $start ?></span>
+                        <span><?= $start ?></span>
                     <?php else: ?>
-                        <a href="<?php echo $block->getStartUrl($start); ?>"><?php echo $start ?></a>
+                        <a href="<?= $block->getStartUrl($start); ?>"><?= $start ?></a>
                     <?php endif; ?>
                 <?php endforeach; ?>
             </div>
@@ -78,8 +78,8 @@
             <?php foreach ($block->getLogFileBlocks() as $time => $logBlock): ?>
                 <tr>
                     <td style="vertical-align: top">
-                        <h3><?php echo $time; ?></h3>
-                        <pre><?php echo str_replace("\n\n", "\n", $logBlock); ?></pre>
+                        <h3><?= $time; ?></h3>
+                        <pre><?= str_replace("\n\n", "\n", $logBlock); ?></pre>
                     </td>
                 </tr>
             <?php endforeach; ?>
@@ -87,23 +87,23 @@
         </div>
         <div class="admin__page-section-item-content controls">
             <div class="admin__page-section-item-content-action limit">
-                <span class="label"><?php echo __('Lines to show') ?>: </span>
+                <span class="label"><?= __('Lines to show') ?>: </span>
                 <?php foreach ($block->getLimits() as $limit): ?>
                     <?php if ($limit == $block->getLimit()): ?>
-                        <span><?php echo $limit ?></span>
+                        <span><?= $limit ?></span>
                     <?php else: ?>
-                        <a href="<?php echo $block->getLimitUrl($limit); ?>"><?php echo $limit ?></a>
+                        <a href="<?= $block->getLimitUrl($limit); ?>"><?= $limit ?></a>
                     <?php endif; ?>
                 <?php endforeach; ?>
             </div>
             <div class="admin__page-section-item-content-action pager">
-                <span class="label"><?php echo __('Start from line') ?>: </span>
+                <span class="label"><?= __('Start from line') ?>: </span>
                 <?php $i = 0; ?>
                 <?php foreach ($block->getStarts() as $start): ?>
                     <?php if ($start == $block->getStart()): ?>
-                        <span><?php echo $start ?></span>
+                        <span><?= $start ?></span>
                     <?php else: ?>
-                        <a href="<?php echo $block->getStartUrl($start); ?>"><?php echo $start ?></a>
+                        <a href="<?= $block->getStartUrl($start); ?>"><?= $start ?></a>
                     <?php endif; ?>
                 <?php endforeach; ?>
             </div>
