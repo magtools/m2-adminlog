@@ -5,6 +5,7 @@ namespace Mtools\AdminLog\Helper;
 use Magento\Framework\App\Helper\Context;
 use Magento\Framework\App\Helper\AbstractHelper;
 use Magento\Framework\App\Filesystem\DirectoryList;
+use Magento\Framework\Filesystem\Driver\File;
 
 class Data extends AbstractHelper
 {
@@ -14,14 +15,22 @@ class Data extends AbstractHelper
     protected $directoryList;
 
     /**
-     * @param Context       $context
+     * @var File
+     */
+    private $driverFile;
+
+    /**
+     * @param Context $context
      * @param DirectoryList $directoryList
+     * @param File $driverFile
      */
     public function __construct(
         Context $context,
-        DirectoryList $directoryList
+        DirectoryList $directoryList,
+        File $driverFile
     ) {
         $this->directoryList = $directoryList;
+        $this->driverFile = $driverFile;
         parent::__construct($context);
     }
 
@@ -39,18 +48,16 @@ class Data extends AbstractHelper
      */
     protected function getLogFiles($path)
     {
-        $list = scandir($path);
-        array_splice($list, 0, 2);
-
+        $list = $this->driverFile->readDirectory($path);
         $result = [];
-        foreach ($list as $index => $file) {
-            if (is_dir($path.DIRECTORY_SEPARATOR.$file)) {
-                foreach ($this->getLogFiles($path.DIRECTORY_SEPARATOR.$file) as $childFile) {
-                    $result[] = $file.DIRECTORY_SEPARATOR.$childFile;
+        foreach ($list as $file) {
+            $value = $file;
+            if ($this->driverFile->isDirectory($file)) {
+                foreach ($this->getLogFiles($file) as $childFile) {
+                    $value = $childFile;
                 }
-            } else {
-                $result[] = $file;
             }
+            $result[] = $value;
         }
 
         return $result;
@@ -84,11 +91,14 @@ class Data extends AbstractHelper
         $path = $this->getLogPath().DIRECTORY_SEPARATOR;
 
         //build log data into array
-        foreach ($this->getLogFiles($this->getLogPath()) as $file) {
-            $logFileData[$file]['name'] = $file;
-            $logFileData[$file]['filesize'] = $this->filesizeToReadableString((filesize($path . $file)));
-            $logFileData[$file]['modTime'] = filemtime($path . $file);
-            $logFileData[$file]['modTimeLong'] = date("F d Y H:i:s.", filemtime($path . $file));
+        $list = $this->getLogFiles($this->getLogPath());
+        foreach ($list as $file) {
+            $fileName = str_replace($path, '', $file);
+            $fileStat = $this->driverFile->stat($file);
+            $logFileData[$fileName]['name'] = $fileName;
+            $logFileData[$fileName]['filesize'] = $this->filesizeToReadableString($fileStat['size']);
+            $logFileData[$fileName]['modTime'] = $fileStat['mtime'];
+            $logFileData[$fileName]['modTimeLong'] = date("F d Y H:i:s.", $fileStat['mtime']);
         }
 
         //sort array by modified time
@@ -119,34 +129,33 @@ class Data extends AbstractHelper
     /**
      * @param      $filepath
      * @param int  $lines
-     * @param bool $adaptive
-     *
      * @return false|string
      */
-    protected function getTailCustom($filepath, $lines = 1, $adaptive = true)
+    protected function getTailCustom($filepath, $lines = 1)
     {
-
         // Open file
-        $f = @fopen($filepath, "rb");
-        if ($f === false) {
+        try {
+            $file = $this->driverFile->fileOpen($filepath, "rb");
+        } catch (\Exception $e) {
+            return false;
+        }
+
+        if ($file === false) {
             return false;
         }
 
         // Sets buffer size, according to the number of lines to retrieve.
         // This gives a performance boost when reading a few lines from the file.
-        if (!$adaptive) {
-            $buffer = 4096;
-        } else {
-            $buffer = ($lines < 2 ? 64 : ($lines < 10 ? 512 : 4096));
-        }
+        $buffer = 4096;
+        $buffer = ($lines < 2 ? 64 : ($lines < 10 ? 512 : 4096));
 
         // Jump to last character
-        fseek($f, -1, SEEK_END);
+        fseek($file, -1, SEEK_END);
 
         // Read it and adjust line number if necessary
         // (Otherwise the result would be wrong if file doesn't end with a blank line)
-        if (fread($f, 1) != "\n") {
-            $lines -= 1;
+        if ($this->driverFile->fileRead($file, 1) != "\n") {
+            --$lines;
         }
 
         // Start reading
@@ -154,19 +163,19 @@ class Data extends AbstractHelper
         $chunk = '';
 
         // While we would like more
-        while (ftell($f) > 0 && $lines >= 0) {
+        while (ftell($file) > 0 && $lines >= 0) {
 
             // Figure out how far back we should jump
-            $seek = min(ftell($f), $buffer);
+            $seek = min(ftell($file), $buffer);
 
             // Do the jump (backwards, relative to where we are)
-            fseek($f, -$seek, SEEK_CUR);
+            fseek($file, -$seek, SEEK_CUR);
 
             // Read a chunk and prepend it to our output
-            $output = ($chunk = fread($f, $seek)) . $output;
+            $output = ($chunk = $this->driverFile->fileRead($file, $seek)) . $output;
 
             // Jump back to where we started reading
-            fseek($f, -mb_strlen($chunk, '8bit'), SEEK_CUR);
+            fseek($file, -mb_strlen($chunk, '8bit'), SEEK_CUR);
 
             // Decrease our line counter
             $lines -= substr_count($chunk, "\n");
@@ -183,7 +192,7 @@ class Data extends AbstractHelper
         }
 
         // Close file and return
-        fclose($f);
+        $this->driverFile->fileClose($file);
         return trim($output);
     }
 }

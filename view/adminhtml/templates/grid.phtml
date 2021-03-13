@@ -4,7 +4,7 @@
 <section class="admin__page-section">
     <div class="admin__page-section-content">
         <div class="admin__page-section-item-title">
-            <span class="title"><?= __('Log Info') ?></span>
+            <span class="title"><?= $escaper->escapeHtml(__('Log Info')) ?></span>
         </div>
         <div class="admin__page-section-item-content">
             <table class="admin__table-primary">
@@ -17,19 +17,27 @@
                     <th class="small">Actions</th>
                 </tr>
             <?php foreach ($logs as $log) { ?>
+                <?php $previewLogFile = $block->previewLogFile($log['name']) ?>
+                <?php $downloadLogFiles = $block->downloadLogFiles($log['name']) ?>
+                <?php $logFile = $block->getLogFile($log['name']) ?>
                 <tr>
-                    <td class="filename"><a href="<?= $block->previewLogFile($log['name']); ?>"><?= $log['name'] ?></a></td>
+                    <td class="filename">
+                        <a href="<?= $escaper->escapeHtml($downloadLogFiles) ?>">
+                            <?= $escaper->escapeUrl($log['name']) ?>
+                        </a>
+                    </td>
                     <td class="small">var/log</td>
-                    <td class="small"><?= $log['filesize'] ?></td>
-                    <td class="date"><?= $log['modTimeLong'] ?></td>
+                    <td class="small"><?= $escaper->escapeHtml($log['filesize']) ?></td>
+                    <td class="date"><?= $escaper->escapeHtml($log['modTimeLong']) ?></td>
                     <td class="log">
                         <div class="admin__page-section-item-content">
-                            <pre><?= $block->getLogFile($log['name']) ?></pre>
+                            <pre><?= $escaper->escapeHtml($logFile) ?></pre>
                         </div>
                     </td>
                     <td class="small">
-                        <span class="action-children"><a href="<?= $block->previewLogFile($log['name']); ?>" class="icon-view"> View</a></span><br/>
-                        <span class="action-children"><a href="<?= $block->downloadLogFiles($log['name']); ?>" class="icon-export"> Download</a></span>
+                        <span class="action-children">
+                            <a href="<?= $escaper->escapeUrl($downloadLogFiles) ?>" class="icon-export"> Download</a>
+                        </span>
                     </td>
                 </tr>
             <?php } ?>
@@ -43,15 +51,6 @@
     .admin__table-primary .date{ width: 10vw; max-width: 150px; }
     .admin__table-primary .log{ width: 50vw; }
     .admin__table-primary .log pre{ overflow: auto; width: 55vw; height: 350px; }
-    .icon-view:before {
-        font-family: 'Admin Icons';
-        content: '\e60c';
-        color: #333333;
-        -webkit-font-smoothing: antialiased;
-        font-style: normal;
-        font-weight: normal;
-        margin-left: -10px;
-    }
     .icon-export:before {
         font-family: 'Admin Icons';
         content: '\e601';

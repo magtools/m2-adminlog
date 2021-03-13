@@ -3,6 +3,8 @@
 namespace Mtools\AdminLog\Controller\Adminhtml\File;
 
 use Zend_Filter_BaseName;
+use Magento\Framework\App\ResponseInterface;
+use Magento\Framework\Controller\ResultInterface;
 use Magento\Backend\App\Action\Context;
 use Magento\Backend\Controller\Adminhtml\System;
 use Magento\Framework\App\Response\Http\FileFactory;
@@ -23,19 +25,27 @@ class Download extends System
     protected $fileFactory;
 
     /**
-     * @param Context     $context
+     * @var DirectoryList
+     */
+    protected $directoryList;
+
+    /**
+     * @param Context $context
      * @param FileFactory $fileFactory
+     * @param DirectoryList $directoryList
      */
     public function __construct(
         Context $context,
-        FileFactory $fileFactory
+        FileFactory $fileFactory,
+        DirectoryList $directoryList
     ) {
         $this->fileFactory = $fileFactory;
+        $this->directoryList = $directoryList;
         parent::__construct($context);
     }
 
     /**
-     * @return \Magento\Framework\App\ResponseInterface|\Magento\Framework\Controller\ResultInterface
+     * @return ResponseInterface|ResultInterface
      * @throws NotFoundException
      */
     public function execute()
@@ -58,13 +68,12 @@ class Download extends System
     }
 
     /**
-     * @param $filename
+     * @param $fileName
      * @return string
      */
     protected function getFilePathWithFile($fileName)
     {
-        $path = DirectoryList::getDefaultConfig()[DirectoryList::LOG];
-
+        $path = $this->directoryList->getDefaultConfig()[DirectoryList::LOG];
         return reset($path) . DS . $fileName;
     }
 }

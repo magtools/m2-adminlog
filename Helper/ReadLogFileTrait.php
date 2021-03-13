@@ -2,7 +2,8 @@
 
 namespace Mtools\AdminLog\Helper;
 
-use Exception;
+use Magento\Framework\Exception\FileSystemException;
+use Magento\Framework\Filesystem\Driver\File;
 
 trait ReadLogFileTrait
 {
@@ -22,6 +23,7 @@ trait ReadLogFileTrait
 
         foreach ($this->fileReader()($file) as $line) {
             //match next log file text block by timestamp
+            $matches = '';
             if (preg_match('#^\[(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2})\]#', $line, $matches)) {
                 if ($start + $limit < ++$block) {
                     break;
@@ -31,9 +33,10 @@ trait ReadLogFileTrait
                 }
 
                 $blockStamp = $matches[1]; // set new block timestamp
-                $i = 0;
+                $index = 0;
                 while (isset($output[$blockStamp])) {
-                    $blockStamp = $matches[1].'.'.++$i;
+                    ++$index;
+                    $blockStamp = $matches[1] . '.' . $index;
                 }
 
                 $line = str_replace($matches[0].' ', '', $line); // cut timestamp out
@@ -51,22 +54,31 @@ trait ReadLogFileTrait
      */
     private function fileReader(): \Closure
     {
-        return function ($file) {
-            if (false !== strpos($file, '../')) {
-                throw new Exception('LFI protection. Parent directory is prohibited to use.');
+        return function ($filePath) {
+            $fileDriver = new File;
+            if (false !== strpos($filePath, '../')) {
+                throw new FileSystemException(__('LFI protection. Parent directory is prohibited to use.'));
             }
 
-            $rs = @fopen($file, 'r');
-
-            if (!$rs) {
-                throw new Exception('Cannot open file: '.$file);
+            try {
+                $file = $fileDriver->fileOpen($filePath, 'r');
+            } catch (\Exception $e) {
+                $file = false;
             }
 
-            while (($line = fgets($rs)) !== false) {
-                yield $line;
+            if (!$file) {
+                throw new FileSystemException(__('Cannot open file: %1', $filePath));
             }
 
-            fclose($rs);
+            if ($fileDriver->stat($filePath)['size'] > 0) {
+                $contents = $fileDriver->fileReadLine($file, $fileDriver->stat($filePath)['size']);
+                $rows = explode("\n", $contents);
+                foreach ($rows as $row) {
+                    yield $row;
+                }
+            }
+
+            $fileDriver->fileClose($file);
         };
     }
 }
