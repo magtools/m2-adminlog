@@ -1,0 +1,25 @@
+<schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
+
+    <table name="mtools_admin_activity" resource="default" comment="Admin Activity Log">
+        <column xsi:type="int" name="entity_id" padding="10" unsigned="true" nullable="false" identity="true" comment="Entity Id"/>
+        <column xsi:type="timestamp" name="created_at" nullable="false" on_update="false" default="CURRENT_TIMESTAMP" comment="Created At" />
+
+        <column xsi:type="int" name="user_id" padding="10" unsigned="true" nullable="false" comment="User Id"/>
+        <column xsi:type="varchar" name="user_name" nullable="false" length="255" comment="User Name"/>
+        <column xsi:type="varchar" name="user_email" nullable="false" length="255" comment="User Email"/>
+
+        <column xsi:type="varchar" name="uri" nullable="false" length="255" comment="Uri"/>
+        <column xsi:type="varchar" name="handler" nullable="false" length="255" comment="Handler"/>
+        <column xsi:type="varchar" name="module" nullable="false" length="255" comment="Module"/>
+        <column xsi:type="varchar" name="route" nullable="false" length="255" comment="Route"/>
+        <column xsi:type="varchar" name="controller" nullable="false" length="255" comment="Controller"/>
+        <column xsi:type="varchar" name="action" nullable="false" length="255" comment="Action"/>
+        <column xsi:type="text" name="params" nullable="true" comment="Params JSON"/>
+
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="entity_id"/>
+        </constraint>
+    </table>
+</schema>
+
